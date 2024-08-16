@@ -36,7 +36,7 @@ for a in i:
 """
 Processando dados
 """
-# Definindo peri�odo de amostragem
+# Definindo periodo de amostragem
 T = np.round(tempo[1]-tempo[0], 4)
     
 # Estendendo os dados de tensao e corrente
