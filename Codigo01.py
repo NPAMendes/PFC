@@ -147,8 +147,8 @@ Calculando parametros de desempenho
 """
 
 # Definindo variaveis de erro
-erro1 = (omega1[0:3000] - omega[0:3000])*np.pi/30
-erro2 = (omega2[0:3000] - omega[0:3000])*np.pi/30
+erro1 = (omega1[0:3000] - omega[0:3000])
+erro2 = (omega2[0:3000] - omega[0:3000])
 
 # Definindo valores do IAE
 IAE1 = np.trapz(abs(erro1), dx = T)
