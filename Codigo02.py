@@ -1,6 +1,6 @@
 import numpy as np # Importando a biblioteca Numpy
 import control as ct # Importando a biblioteca Control
-import matplotlib.pyplot as plt # Importando a bi0blioteca Matplotlib.pyplot
+import matplotlib.pyplot as plt # Importando a biblioteca Matplotlib.pyplot
 
 plt.close('all') # Fecha gráficos
 s = ct.tf('s') # Criando uma função de transferência de F(s) = s
@@ -11,6 +11,7 @@ Defininido o modelo do sistema
 G = -----------
      Lf*s + Rf
 """
+
 Lf = 21.3
 Rf = 212.94
 G = ct.tf([1],[Lf, Rf]); # Defininido o modelo do sistema
@@ -51,7 +52,7 @@ plt.plot(np.real(p2), np.imag(p2),'g*', label = 'Polos desejados')
 plt.legend()
 
 # Ciando o controlador 
-CL = (1524)/(s)
+C = (1524)/(s)
 
 # Criando a malha fechada
-Mf = ct.minreal(ct.feedback(CL*G))
+Mf = ct.minreal(ct.feedback(C*G))
