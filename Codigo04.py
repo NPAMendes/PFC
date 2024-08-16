@@ -53,7 +53,6 @@ Calculando energia fornecida
 T = np.round(tempo[1] - tempo[0],4) # Definindo periodo de amostragem
 
 Pt = corrente*tensao # Definindo a potencia do sistema
-
 Jt = np.trapz(Pt, dx = T) # Definindo a energia do sistema
 
 """
@@ -73,7 +72,6 @@ for i in tensao:
 omega = np.array(omega)
 
 Pm = b*omega**2 # Potencia mecanica
-
 Jm = np.trapz(Pm, dx = T) # Energia Mecanica
 
 """
