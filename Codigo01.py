@@ -3,6 +3,8 @@ import numpy as np # Importando biblioteca Numpy
 import matplotlib.pyplot as plt # Importando biblioteca para plotagem de graficos
 import control as ct # Importando a biblioteca control
 
+plt.close('all')
+
 """
 Coletando dados de arquivos CSV
 """
@@ -33,28 +35,10 @@ corrente = [] # Criando vetor que recebera os valores de Corrente em Amperes
 for a in i:
     corrente.append(float(a[4])/0.2)
     
-"""
-Processando dados
-"""
-# Definindo periodo de amostragem
-T = np.round(tempo[1]-tempo[0], 4)
-    
-# Estendendo os dados de tensao e corrente
-tensao2 = []
-corrente2 = []
+corrente = np.array(corrente)
+tensao = np.array(tensao)
+tempo = np.array(tempo)
 
-for k in range(27):
-    tensao2.append(tensao[-k-1])
-    corrente2.append(corrente[-k-1])
-
-for k in range(2000):
-    tensao = [*tensao, *tensao2]
-    corrente = [*corrente, *corrente2]
-
-# Estendendo os dados de tempo
-tempo = np.arange(tempo[0], len(tensao)*T + tempo[0], T)
-tempo = tempo[250:]
-    
 """
 Criando modelo do sistema
 """
@@ -70,7 +54,7 @@ K = 1.356 # Constate de magnetizacao
 G = ct.tf([K], [La*J, La*b + Ra*J, Ra*b + K**2])
 
 # Aplicando o sinal de entrada no sistema
-t, omega = ct.forced_response(G, tempo, tensao[250:])
+t, omega = ct.forced_response(G, tempo, tensao)
 
 # convertendo omega em RPM
 omega = omega*30/np.pi
@@ -81,22 +65,30 @@ plt.subplot(311)
 plt.plot(t,omega,'b', label = "Completo")
 plt.plot(t,0.95*omega[-1]*np.ones(len(t)),'--k', label = 'Criterio de $2%$')
 plt.grid()
-plt.ylabel('$\\omega (RPM)$')
-plt.xlim(0,0.3)
+plt.ylabel('$\\omega (RPM)$', fontsize=18)
+plt.xlim([0, tempo[-1]])
 
 plt.subplot(312) 
-plt.plot(t,tensao[250:],'b')
+plt.plot(t,tensao,'b')
 plt.grid()
-plt.ylabel('Tensao (V)')
-plt.xlim(0,0.35)
+plt.ylabel('Tensao (V)', fontsize=18)
+plt.xlim([0, tempo[-1]])
 
 plt.subplot(313) 
-plt.plot(t,corrente[250:],'b')
+plt.plot(t,corrente,'b')
 plt.grid()
-plt.ylabel('Corrente (A)')
-plt.xlabel('Tempo (s)')
-plt.xlim(0,0.35)
+plt.ylabel('Corrente (A)', fontsize=18)
+plt.xlabel('Tempo (s)', fontsize=18)
+plt.xlim([0, tempo[-1]])
 
+plt.subplots_adjust(
+    top=0.984,
+    bottom=0.07,
+    left=0.042,
+    right=0.992,
+    hspace=0.145,
+    wspace=0.2
+)
 """
 Repetinndo o processo para sistema de primeira ordem com La = 0
 """
@@ -105,7 +97,7 @@ Repetinndo o processo para sistema de primeira ordem com La = 0
 G1 = ct.tf([K], [Ra*J, Ra*b + K**2])
 
 # Aplicando o sinal de entrada no sistema
-t, omega1 = ct.forced_response(G1, tempo, tensao[250:])
+t, omega1 = ct.forced_response(G1, tempo, tensao)
 
 # convertendo omega em RPM
 omega1 = omega1*30/np.pi
@@ -124,7 +116,7 @@ Repetinndo o processo para sistema de primeira ordem com La = 0 e b = 0
 G2 = ct.tf([K], [Ra*J, K**2])
 
 # Aplicando o sinal de entrada no sistema
-t, omega2 = ct.forced_response(G2, tempo, tensao[250:])
+t, omega2 = ct.forced_response(G2, tempo, tensao)
 
 # convertendo omega em RPM
 omega2 = omega2*30/np.pi
@@ -133,8 +125,8 @@ omega2 = omega2*30/np.pi
 plt.figure(1)
 plt.subplot(311) 
 plt.plot(tempo,omega2,'r', label = "$L_a = 0 H$ e $b=0(N.m)/(rad/s)$")
-plt.legend()
-plt.axes([0.4, 0.75, 0.4, 0.16])
+plt.legend(fontsize=18)
+plt.axes([0.45, 0.75, 0.3, 0.16])
 plt.plot(t,omega,'b')
 plt.plot(t,omega1,'g')
 plt.plot(t,omega2,'k')
@@ -149,6 +141,9 @@ Calculando parametros de desempenho
 # Definindo variaveis de erro
 erro1 = (omega1[0:3000] - omega[0:3000])
 erro2 = (omega2[0:3000] - omega[0:3000])
+
+# Definindo periodo de amostragem
+T = tempo[1]-tempo[0]
 
 # Definindo valores do IAE
 IAE1 = np.trapz(abs(erro1), dx = T)
