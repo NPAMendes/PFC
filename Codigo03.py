@@ -1,4 +1,4 @@
-# Importando bibliotecas necessárias
+# Importando bibliotecas necessarias
 import numpy as np
 import csv
 
@@ -18,10 +18,10 @@ corrente_real = []
 for a in i:
     if a[0] != 'Time':
         time.append(float(a[0]))
-        tensao_real.append(float(a[1]))
-        tensao_desejada.append(float(a[3]))
-        corrente_desejada.append(float(a[4]))
-        corrente_real.append(float(a[5]))
+        tensao_real.append(float(a[5]))
+        tensao_desejada.append(float(a[6]))
+        corrente_desejada.append(float(a[7]))
+        corrente_real.append(float(a[2]))
 
 # Covertndo as listas em vetores
 time = np.array(time)
